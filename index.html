@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>水豚天堂数据库 · 官网查不到的，它都查得到</title>
+<meta name="description" content="水豚天堂（卡皮巴拉服）桌面数据工具。词条筛选、收藏夹、关联查询，9.4 万条数据离线可用，纯为爱发电。">
+<style>
+  :root {
+    --ink: #E8E6E1;
+    --ink-2: #A8A49C;
+    --ink-3: #6E6A63;
+    --bg: #14161A;
+    --bg-2: #1A1D22;
+    --hair: rgba(232, 230, 225, 0.13);
+    --hair-2: rgba(232, 230, 225, 0.07);
+    --gold: #FFC53D;
+    --seal: #C8453C;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { -webkit-text-size-adjust: 100%; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC", sans-serif;
+    font-size: 15px;
+    line-height: 1.7;
+    letter-spacing: 0.2px;
+  }
+
+  .fig-num { font-variant-numeric: tabular-nums; }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 32px; }
+
+  /* ===== 顶栏 ===== */
+  .gate-bar {
+    position: sticky;
+    top: 0;
+    z-index: 30;
+    background: rgba(20, 22, 26, 0.95);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--hair);
+  }
+  .gate-inner {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 12px 32px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  .gate-txt {
+    flex: 1;
+    font-size: 13px;
+    color: var(--ink-2);
+    letter-spacing: 1px;
+    min-width: 0;
+  }
+  .gate-txt b { color: var(--gold); font-weight: 500; }
+
+  .btn-dl {
+    flex-shrink: 0;
+    padding: 9px 22px;
+    background: transparent;
+    color: var(--ink-3);
+    border: 1px solid var(--hair);
+    border-radius: 2px;
+    font-family: inherit;
+    font-size: 13px;
+    letter-spacing: 2px;
+    text-decoration: none;
+    cursor: not-allowed;
+    transition: color .2s, background-color .2s, border-color .2s;
+  }
+  .btn-dl.ready {
+    color: var(--bg);
+    background: var(--gold);
+    border-color: var(--gold);
+    cursor: pointer;
+  }
+  .btn-dl.ready:hover { background: #FFD268; border-color: #FFD268; }
+
+  /* ===== 分段 ===== */
+  .band { padding-top: 34px; }
+  .band + .band {
+    margin-top: 38px;
+    border-top: 1px solid var(--hair);
+  }
+
+  /* ===== 报头 ===== */
+  .masthead { font-size: 11px; letter-spacing: 5px; color: var(--ink-3); }
+  h1 {
+    font-family: "Songti SC", "SimSun", "Noto Serif CJK SC", serif;
+    font-size: 38px;
+    line-height: 1.22;
+    font-weight: 500;
+    letter-spacing: 2px;
+    margin-top: 10px;
+  }
+  .h1-sub {
+    font-family: "Songti SC", "SimSun", "Noto Serif CJK SC", serif;
+    font-size: 25px;
+    line-height: 1.35;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    color: var(--gold);
+    margin-top: 8px;
+  }
+  .rule-double { width: 50px; margin: 16px 0 20px; }
+  .rule-double i { display: block; height: 1px; background: var(--seal); }
+  .rule-double i + i { margin-top: 3px; }
+
+  /* ===== 栏头 ===== */
+  .bar-head {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    padding-bottom: 9px;
+    border-bottom: 1px solid var(--hair);
+  }
+  .bar-head span { font-size: 13px; letter-spacing: 3px; color: var(--seal); }
+  .bar-head.big span {
+    font-family: "Songti SC", "SimSun", "Noto Serif CJK SC", serif;
+    font-size: 26px;
+    letter-spacing: 4px;
+    color: var(--ink);
+  }
+  .bar-head em {
+    font-style: normal;
+    font-size: 12px;
+    letter-spacing: 1px;
+    color: var(--ink-3);
+    margin-left: auto;
+  }
+
+  /* ===== 支持作者（上半）===== */
+  .sp-cols {
+    display: grid;
+    grid-template-columns: 1fr 268px;
+    gap: 0 44px;
+    padding-top: 20px;
+  }
+  .sponsor-note {
+    font-size: 14px;
+    line-height: 1.78;
+    color: var(--ink-2);
+    margin-bottom: 12px;
+  }
+  .sponsor-note b { color: var(--ink); font-weight: 500; }
+  .sp-free {
+    padding: 12px 14px;
+    border: 1px solid var(--hair);
+    border-left: 2px solid var(--gold);
+    font-size: 14px;
+    line-height: 1.78;
+    color: var(--ink);
+    margin-bottom: 12px;
+  }
+  .sp-cost {
+    padding-left: 13px;
+    border-left: 2px solid var(--seal);
+    font-size: 14px;
+    line-height: 1.78;
+    color: var(--ink-2);
+    margin-bottom: 14px;
+  }
+  .sp-cost b { color: var(--ink); font-weight: 500; }
+  .sp-ask {
+    padding-top: 14px;
+    border-top: 1px solid var(--hair);
+    font-size: 14.5px;
+    line-height: 1.82;
+    color: var(--ink);
+  }
+  .sp-ask b { color: var(--gold); font-weight: 500; }
+  .sp-sign {
+    margin-top: 10px;
+    font-size: 13.5px;
+    line-height: 1.78;
+    color: var(--ink-3);
+  }
+
+  /* 二维码栏 */
+  .qr-col { text-align: center; }
+  .qr-frame {
+    display: inline-block;
+    padding: 8px;
+    background: #fff;
+    border-radius: 2px;
+  }
+  .qr-frame img { display: block; width: 218px; height: 218px; object-fit: contain; }
+  .qr-cap { margin-top: 12px; font-size: 14px; color: var(--gold); letter-spacing: 1px; }
+  .qr-sub { margin-top: 5px; font-size: 12px; color: var(--ink-3); line-height: 1.7; }
+  .qr-link {
+    display: inline-block;
+    margin-top: 14px;
+    padding: 8px 20px;
+    border: 1px solid var(--hair);
+    border-radius: 2px;
+    font-size: 12.5px;
+    letter-spacing: 2px;
+    color: var(--ink-2);
+    text-decoration: none;
+    transition: color .2s, border-color .2s;
+  }
+  .qr-link:hover { color: var(--gold); border-color: var(--gold); }
+
+  /* ===== 特点（下半左）===== */
+  .feat-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 40px;
+    padding-top: 18px;
+  }
+  .feat {
+    padding: 11px 0;
+    border-bottom: 1px solid var(--hair-2);
+  }
+  .feat-hd { display: flex; align-items: baseline; gap: 9px; }
+  .feat-hd b {
+    font-size: 14px; font-weight: 500;
+    color: var(--gold); letter-spacing: 1px; flex-shrink: 0;
+  }
+  .feat-hd i { font-style: normal; font-size: 11px; color: var(--ink-3); }
+  .feat p { margin-top: 3px; font-size: 13.5px; color: var(--ink-2); line-height: 1.68; }
+  .feat p b { color: var(--ink); font-weight: 500; }
+  .feat p b.fig-num { color: var(--gold); }
+
+  /* ===== 截图（下半右）===== */
+  .shots {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    padding-top: 18px;
+  }
+  .shot { margin: 0; }
+  .shot-btn {
+    display: block;
+    width: 100%;
+    padding: 0;
+    border: 1px solid var(--hair);
+    border-radius: 2px;
+    background: none;
+    cursor: zoom-in;
+    overflow: hidden;
+    transition: border-color .18s;
+  }
+  .shot-btn:hover { border-color: rgba(255, 197, 61, 0.5); }
+  .shot-btn img { display: block; width: 100%; }
+  .shot figcaption {
+    margin-top: 6px;
+    font-size: 11.5px;
+    color: var(--ink-3);
+    letter-spacing: 0.5px;
+    line-height: 1.55;
+  }
+  .shot.wide { grid-column: 1 / -1; }
+
+  /* ===== 灯箱 ===== */
+  .lb {
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    background: rgba(10, 11, 13, 0.94);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    padding: 34px;
+    cursor: zoom-out;
+  }
+  .lb[hidden] { display: none; }
+  .lb img {
+    max-width: 100%;
+    max-height: calc(100vh - 116px);
+    border: 1px solid rgba(232, 230, 225, 0.16);
+    border-radius: 2px;
+  }
+  .lb-cap { font-size: 13px; color: var(--ink-2); letter-spacing: 1px; text-align: center; }
+  .lb-hint {
+    font-size: 11.5px; color: var(--ink-3); letter-spacing: 2px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .lb-hint i {
+    font-style: normal; font-size: 11px;
+    border: 1px solid var(--hair); border-radius: 2px;
+    padding: 3px 7px;
+  }
+
+  /* ===== 页脚 ===== */
+  footer {
+    max-width: 1080px;
+    margin: 44px auto 0;
+    padding: 18px 32px 42px;
+    border-top: 1px solid var(--hair);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 26px;
+    font-size: 12.5px;
+    color: var(--ink-3);
+  }
+  footer a { color: var(--ink-3); text-decoration: none; border-bottom: 1px solid var(--hair); }
+  footer a:hover { color: var(--gold); border-color: var(--gold); }
+  footer .sp { margin-left: auto; }
+
+  /* ===== 悬浮气泡 ===== */
+  .fab {
+    position: fixed;
+    right: 22px; bottom: 22px;
+    z-index: 40;
+    display: flex; align-items: center; gap: 7px;
+    padding: 10px 15px 10px 11px;
+    background: var(--bg-2);
+    border: 0.5px solid var(--hair);
+    border-radius: 2px;
+    font-family: inherit;
+    font-size: 13px; letter-spacing: 2px;
+    color: var(--ink-2);
+    cursor: pointer;
+    transition: color .2s, border-color .2s;
+  }
+  .fab:hover { color: var(--gold); border-color: rgba(255, 197, 61, 0.45); }
+  .fab .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); flex-shrink: 0; }
+
+  .qr-pop {
+    position: fixed;
+    right: 22px; bottom: 74px;
+    z-index: 41;
+    width: 268px;
+    padding: 18px 20px 20px;
+    background: var(--bg-2);
+    border: 0.5px solid var(--hair);
+    text-align: center;
+  }
+  .qr-pop[hidden] { display: none; }
+  .qr-pop .qr-frame { display: inline-block; padding: 7px; background: #fff; border-radius: 2px; }
+  .qr-pop .qr-frame img { display: block; width: 196px; height: 196px; object-fit: contain; }
+  .qr-pop .t0 {
+    font-size: 12px; color: var(--seal); letter-spacing: 2px;
+    padding-bottom: 9px; border-bottom: 1px solid var(--hair); margin-bottom: 13px;
+  }
+  .qr-pop .t1 { margin-top: 12px; font-size: 14px; color: var(--gold); letter-spacing: 1px; }
+  .qr-pop .t2 { margin-top: 6px; font-size: 12px; color: var(--ink-3); line-height: 1.75; }
+  .qr-pop a { color: var(--ink-2); font-size: 12px; letter-spacing: 2px; text-decoration: none; }
+  .qr-pop a:hover { color: var(--gold); }
+
+  /* ===== 响应式 ===== */
+  @media (max-width: 900px) {
+    .sp-cols { grid-template-columns: 1fr; gap: 26px; }
+    .qr-col { text-align: left; }
+    .feat-grid { grid-template-columns: 1fr; }
+    h1 { font-size: 32px; }
+    .h1-sub { font-size: 21px; }
+    .bar-head.big span { font-size: 22px; }
+  }
+  @media (max-width: 600px) {
+    body { font-size: 14px; }
+    .wrap, .gate-inner, footer { padding-left: 18px; padding-right: 18px; }
+    .gate-inner { flex-wrap: wrap; gap: 10px 14px; }
+    .gate-txt { flex-basis: 100%; }
+    .btn-dl { text-align: center; }
+    h1 { font-size: 26px; letter-spacing: 1px; }
+    .h1-sub { font-size: 17px; letter-spacing: 0.5px; }
+    .bar-head.big span { font-size: 19px; letter-spacing: 2px; }
+    .masthead { letter-spacing: 3px; }
+    .shots { grid-template-columns: 1fr; }
+    .lb { padding: 16px; }
+    .fab { right: 14px; bottom: 14px; padding: 9px 13px 9px 10px; font-size: 12px; }
+    .qr-pop { right: 14px; left: 14px; bottom: 66px; width: auto; }
+    footer .sp { margin-left: 0; }
+  }
+</style>
+</head>
+<body>
+
+<div class="gate-bar">
+  <div class="gate-inner">
+    <p class="gate-txt" id="gateTxt">阅读 20 秒后可自行下载 · 剩余 <b class="fig-num" id="cd">20</b> 秒</p>
+    <a class="btn-dl" id="dlBtn" href="#" aria-disabled="true" title="阅读 20 秒后解锁下载链接">倒计时中 · 20s</a>
+  </div>
+</div>
+
+<!-- ============ 上半：报头 + 支持作者 ============ -->
+<div class="wrap band">
+  <p class="masthead">卡皮巴拉服 · 离线数据库</p>
+  <h1>水豚天堂数据库</h1>
+  <p class="h1-sub">官网查不到的，它都查得到</p>
+  <div class="rule-double"><i></i><i></i></div>
+
+  <div style="margin-top:30px;">
+    <div class="bar-head big"><span>支持作者</span><em>为什么会有这个页面</em></div>
+
+    <div class="sp-cols">
+      <div>
+        <p class="sponsor-note">
+          先把话说清楚：<b>这个软件完全免费，没有广告，不收费，也没有任何"内购"</b>。
+          下载就下载，不用注册、不用加群、不用看广告。它是一个纯为爱发电的东西。
+        </p>
+
+        <div class="sp-free">
+          那为什么还要专门做这样一个页面？<br>
+          因为它<b>极其费 Token</b>。9.4 万条数据不是从官网拷下来就完事的——
+          要一条一条抓、一条一条核对、把官网前后不一致的地方理清楚。
+          AI 每读一次、写一次、改一次，都在烧钱。
+        </div>
+
+        <p class="sp-cost">
+          而且它<b>看着简单，其实不简单</b>。你看到的每个数字、每条关联、每个中文译名，
+          背后都是反复抓取、比对、重做。开销和电费都是作者自己掏腰包在付，
+          后续功能开发还得<b>看经济实力</b>——有余力才能继续做新的东西。
+        </p>
+
+        <div class="sp-ask">
+          所以这一页是给<b>有余力的人</b>看的。你不欠我们什么，也完全不用有负担。<br>
+          但如果你觉得这东西真的帮你省了时间，愿意搭一把，让作者能把 Token 的窟窿补上——
+          那这份心意，我们就收下了。
+        </div>
+
+        <p class="sp-sign">
+          一个人做不动这么大的数据。你帮的这一点，是想让这个工具变得更好的下一个版本。
+        </p>
+      </div>
+
+      <div class="qr-col">
+        <div class="qr-frame">
+          <img src="donate-wechat.png" alt="微信收款码"
+               onerror="this.parentNode.style.display='none';
+                        this.parentNode.nextElementSibling.style.display='block';">
+        </div>
+        <p class="qr-cap">微信扫码 · 赞助 Token 费</p>
+        <p class="qr-sub" style="display:none;color:var(--ink-3);font-size:12px;padding:40px 0;">
+          收款码图片未放到本页同目录
+        </p>
+        <p class="qr-sub">免费、无广告、不收费。<br>你的每次投喂，都能多撑一天。</p>
+        <a class="qr-link" href="https://space.bilibili.com/450937076" target="_blank" rel="noreferrer">B 站主页</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 下半：特点 + 截图 ============ -->
+<div class="wrap band">
+  <div class="feat-grid">
+    <div>
+      <div class="bar-head"><span>不一样的地方</span></div>
+      <div style="padding-top:2px;">
+        <div class="feat">
+          <div class="feat-hd"><b>数据规模</b></div>
+          <p><b class="fig-num">9.4 万</b>条：<b class="fig-num">2.4万</b>物品 · <b class="fig-num">2.6万</b>法术 · <b class="fig-num">2.1万</b>道具 · <b class="fig-num">1.4万</b>生物 · <b class="fig-num">6.6千</b>任务，全部离线可用。</p>
+        </div>
+        <div class="feat">
+          <div class="feat-hd"><b>装备词条筛选</b><i>只有这里能查</i></div>
+          <p>伤害返还、元素伤害、命中暴击这些<b>乌龟服特殊词条</b>，官网和插件只能逐个搜。这里能<b>按类型筛</b>（10 个分类带件数），也能直接搜关键词，而且<b>只在你当前看的分类内筛</b>——看手镯就只搜手镯。</p>
+        </div>
+        <div class="feat">
+          <div class="feat-hd"><b>收藏夹</b><i>官网做不到</i></div>
+          <p>刷到的装备、法术、任务随手收藏，自己分组。官网收藏了还得回来重新找。</p>
+        </div>
+        <div class="feat">
+          <div class="feat-hd"><b>关联打通</b></div>
+          <p>点生物 → 掉的每件装备、卖多少钱、教什么法术。点装备 → 谁在产它。官网是散的。</p>
+        </div>
+        <div class="feat">
+          <div class="feat-hd"><b>新手攻略内置</b></div>
+          <p>升级路线图、生存模式、游戏规则、副本与团本消耗品、团本 BUFF、声望攻略——<b>不用再去群里翻网页</b>。</p>
+        </div>
+        <div class="feat">
+          <div class="feat-hd"><b>离线常驻</b></div>
+          <p>数据打包在程序里，飞行、挂机、断网都不影响。</p>
+        </div>
+        <div class="feat">
+          <div class="feat-hd"><b>数据来源</b></div>
+          <p>全部取自 <code>database.capycraft.io</code>，逐条核对，不用第三方站点。</p>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="bar-head"><span>只有这里能查</span><em>点击放大</em></div>
+      <div class="shots">
+        <figure class="shot wide">
+          <button class="shot-btn" data-img="shots/affix.png" data-cap="装备词条 · 手镯 · 返还转化 167 件 · 官网与插件都查不到">
+            <img src="shots/affix.png" alt="装备词条筛选界面">
+          </button>
+          <figcaption>
+            装备词条筛选 · 10 个分类带件数，限定在当前分类内（这里选的是「手镯 663」）。
+            <b>官网和插件都只能逐个搜，这里能按类型筛、能搜关键词。</b>
+          </figcaption>
+        </figure>
+        <figure class="shot">
+          <button class="shot-btn" data-img="shots/items.png" data-cap="物品分类页 · 12 大分类树，一层层筛到具体物品">
+            <img src="shots/items.png" alt="物品分类页">
+          </button>
+          <figcaption>12 大分类树 · 一层层筛</figcaption>
+        </figure>
+        <figure class="shot">
+          <button class="shot-btn" data-img="shots/creature.png" data-cap="生物分类 · 10 类 14397 只，左侧一级分类 + 右侧等级/生命筛选">
+            <img src="shots/creature.png" alt="生物分类页">
+          </button>
+          <figcaption>生物 10 类 14397 只 · 点开看掉落与传授</figcaption>
+        </figure>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <span>水豚天堂数据库 · 纯为爱发电</span>
+  <a href="https://database.capycraft.io/" target="_blank" rel="noreferrer">数据来源 database.capycraft.io</a>
+  <a href="https://space.bilibili.com/450937076" target="_blank" rel="noreferrer">B 站主页</a>
+  <span class="sp">本站不收集任何信息</span>
+</footer>
+
+<button class="fab" id="spBtn" aria-expanded="false" title="支持作者">
+  <i class="dot"></i><span>支持作者</span>
+</button>
+
+<div class="qr-pop" id="qrPop" hidden>
+  <p class="t0">纯为爱发电 · 9.4 万条数据</p>
+  <div class="qr-frame">
+    <img src="donate-wechat.png" alt="微信收款码"
+         onerror="this.style.display='none';
+                  this.parentNode.nextElementSibling.style.display='block';">
+    <p style="display:none;color:var(--ink-3);font-size:12px;padding:50px 16px;line-height:1.7;">
+      收款码图片未放到<br>本页同目录
+    </p>
+  </div>
+  <p class="t1">微信扫码 · 赞助 Token 费</p>
+  <p class="t2">软件免费、无广告、不收费。<br>有能力的话，帮作者把 Token 费补上。</p>
+  <p class="t2">
+    <a href="https://space.bilibili.com/450937076" target="_blank" rel="noreferrer">B 站主页 ↗</a>
+  </p>
+</div>
+
+<div class="lb" id="lb" hidden>
+  <img id="lbImg" src="" alt="">
+  <p class="lb-cap" id="lbCap"></p>
+  <p class="lb-hint"><i>点击任意处或按 Esc 关闭</i></p>
+</div>
+
+<script>
+/* ============================================================
+   下载地址（夸克网盘，含提取码已带在链接里）
+   要换下载地址，只改下面这一行
+   ============================================================ */
+var PAIDAN_LINK = 'https://pan.quark.cn/s/abbedd1b96d1?pwd=tzyx';
+
+(function () {
+  var TOTAL = 20;
+  var left = TOTAL;
+  var cd = document.getElementById('cd');
+  var btn = document.getElementById('dlBtn');
+  var txt = document.getElementById('gateTxt');
+  var href = PAIDAN_LINK;
+
+  function ready() {
+    btn.classList.add('ready');
+    btn.setAttribute('aria-disabled', 'false');
+    btn.setAttribute('href', href);
+    // 新标签页打开：用户看完网盘还能用浏览器后退回到本页
+    btn.setAttribute('target', '_blank');
+    btn.setAttribute('rel', 'noreferrer noopener');
+    btn.textContent = '点击下载';
+    btn.removeAttribute('title');
+    txt.innerHTML = '可以下载了 · 程序 190 MB，解压后约占 300 MB';
+  }
+
+  var timer = setInterval(function () {
+    left--;
+    cd.textContent = left;
+    btn.textContent = '倒计时中 · ' + left + 's';
+    if (left <= 0) {
+      clearInterval(timer);
+      ready();
+    }
+  }, 1000);
+
+  /* ---- 支持作者：右下悬浮气泡 ---- */
+  var spBtn = document.getElementById('spBtn');
+  var pop = document.getElementById('qrPop');
+
+  function togglePop(force) {
+    var open = force !== undefined ? force : pop.hidden;
+    pop.hidden = !open;
+    spBtn.setAttribute('aria-expanded', String(open));
+  }
+
+  spBtn.addEventListener('click', function (e) { e.stopPropagation(); togglePop(); });
+  pop.addEventListener('click', function (e) { e.stopPropagation(); });
+  document.addEventListener('click', function () { if (!pop.hidden) togglePop(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') togglePop(false); });
+
+  togglePop(false);
+
+  /* ---- 截图灯箱：点击放大 ---- */
+  var lb = document.getElementById('lb');
+  var lbImg = document.getElementById('lbImg');
+  var lbCap = document.getElementById('lbCap');
+  var lastFocus = null;
+
+  function openLb(src, cap, trigger) {
+    lbImg.src = src;
+    lbImg.alt = cap || '';
+    lbCap.textContent = cap || '';
+    lastFocus = trigger || null;
+    lb.hidden = false;
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeLb() {
+    if (lb.hidden) return;
+    lb.hidden = true;
+    lbImg.src = '';
+    document.body.style.overflow = '';
+    if (lastFocus) lastFocus.focus();
+    lastFocus = null;
+  }
+
+  Array.prototype.forEach.call(document.querySelectorAll('.shot-btn'), function (b) {
+    b.addEventListener('click', function (e) {
+      e.stopPropagation();
+      openLb(b.getAttribute('data-img'), b.getAttribute('data-cap'), b);
+    });
+  });
+
+  lb.addEventListener('click', closeLb);
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') {
+      if (!lb.hidden) { closeLb(); return; }
+      togglePop(false);
+    }
+  });
+
+  // 左右方向键切换图片（按 DOM 顺序）
+  document.addEventListener('keydown', function (e) {
+    if (lb.hidden) return;
+    if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+    var list = Array.prototype.slice.call(document.querySelectorAll('.shot-btn'));
+    var idx = list.indexOf(lastFocus);
+    if (idx < 0) return;
+    var next = e.key === 'ArrowRight'
+      ? (idx + 1) % list.length
+      : (idx - 1 + list.length) % list.length;
+    lastFocus = list[next];
+    openLb(lastFocus.getAttribute('data-img'), lastFocus.getAttribute('data-cap'), lastFocus);
+  });
+})();
+</script>
+
+</body>
+</html>
