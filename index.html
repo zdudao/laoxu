@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>水豚天堂数据库 · 官网查不到的，它都查得到</title>
-<meta name="description" content="水豚天堂（卡皮巴拉服）桌面数据工具。词条筛选、收藏夹、关联查询，9.4 万条数据离线可用，纯为爱发电。">
+<meta name="description" content="水豚天堂（卡皮巴拉服）桌面数据工具。词条筛选、天赋模拟器、装备提升路线、副本掉落、收藏分享，9.4 万条数据离线可用，纯为爱发电。">
 <style>
   :root {
     --ink: #E8E6E1;
@@ -448,7 +448,19 @@
       <div style="padding-top:2px;">
         <div class="feat">
           <div class="feat-hd"><b>数据规模</b></div>
-          <p><b class="fig-num">9.4 万</b>条：<b class="fig-num">2.4万</b>物品 · <b class="fig-num">2.6万</b>法术 · <b class="fig-num">2.1万</b>道具 · <b class="fig-num">1.4万</b>生物 · <b class="fig-num">6.6千</b>任务，全部离线可用。</p>
+          <p><b class="fig-num">9.4 万</b>条：<b class="fig-num">2.47万</b>物品 · <b class="fig-num">2.67万</b>法术 · <b class="fig-num">2.11万</b>道具 · <b class="fig-num">1.44万</b>生物 · <b class="fig-num">6.7千</b>任务，全部离线可用。</p>
+        </div>
+        <div class="feat">
+          <div class="feat-hd"><b>天赋模拟器</b><i>新功能</i></div>
+          <p>全职业天赋树在线加点，配好方案能截图保存。不用再开网页版对着点，<b>游戏里切天赋直接对照</b>。</p>
+        </div>
+        <div class="feat">
+          <div class="feat-hd"><b>装备提升路线</b><i>新功能</i></div>
+          <p>按副本分档推荐装备，选好职业自动筛你能穿的部位。<b>下副本前查一圈，知道该刷哪个 BOSS</b>。</p>
+        </div>
+        <div class="feat">
+          <div class="feat-hd"><b>副本掉落查询</b><i>新功能</i></div>
+          <p>8 大分类（地下城、团本、PVP、制造、声望等），点开副本 → 选 BOSS → 看掉落。<b>不用再翻插件列表</b>。</p>
         </div>
         <div class="feat">
           <div class="feat-hd"><b>装备词条筛选</b><i>只有这里能查</i></div>
@@ -456,7 +468,7 @@
         </div>
         <div class="feat">
           <div class="feat-hd"><b>收藏夹</b><i>官网做不到</i></div>
-          <p>刷到的装备、法术、任务随手收藏，自己分组。官网收藏了还得回来重新找。</p>
+          <p>刷到的装备、法术、任务随手收藏，自己分组。收藏能<b>生成分享码</b>发给队友，团本装备还能<b>"破例显示"</b>钉住不消失。</p>
         </div>
         <div class="feat">
           <div class="feat-hd"><b>关联打通</b></div>
@@ -480,26 +492,35 @@
     <div>
       <div class="bar-head"><span>只有这里能查</span><em>点击放大</em></div>
       <div class="shots">
+        <!-- TODO: 替换成新功能截图：天赋模拟器页 -->
         <figure class="shot wide">
+          <button class="shot-btn" data-img="shots/talent.png" data-cap="天赋模拟器 · 全职业天赋树在线加点，配好方案截图保存">
+            <img src="shots/talent.png" alt="天赋模拟器界面">
+          </button>
+          <figcaption>
+            <b>天赋模拟器 · 全职业天赋树在线加点，配好方案截图保存，游戏里切天赋直接对照。</b>
+          </figcaption>
+        </figure>
+        <!-- TODO: 替换成新功能截图：装备提升路线页 -->
+        <figure class="shot">
+          <button class="shot-btn" data-img="shots/gear-route.png" data-cap="装备提升路线 · 按副本分档推荐装备，选职业自动筛部位">
+            <img src="shots/gear-route.png" alt="装备提升路线页">
+          </button>
+          <figcaption>装备提升路线 · 按副本分档，选好职业自动筛你能穿的</figcaption>
+        </figure>
+        <!-- TODO: 替换成新功能截图：副本掉落页 -->
+        <figure class="shot">
+          <button class="shot-btn" data-img="shots/atlasloot.png" data-cap="副本掉落查询 · 8大分类，点开副本选BOSS看掉落">
+            <img src="shots/atlasloot.png" alt="副本掉落页">
+          </button>
+          <figcaption>副本掉落查询 · 地下城/团本/PVP/制造，选BOSS看掉落</figcaption>
+        </figure>
+        <!-- 保留原有核心截图：词条筛选 -->
+        <figure class="shot">
           <button class="shot-btn" data-img="shots/affix.png" data-cap="装备词条 · 手镯 · 返还转化 167 件 · 官网与插件都查不到">
             <img src="shots/affix.png" alt="装备词条筛选界面">
           </button>
-          <figcaption>
-            装备词条筛选 · 10 个分类带件数，限定在当前分类内（这里选的是「手镯 663」）。
-            <b>官网和插件都只能逐个搜，这里能按类型筛、能搜关键词。</b>
-          </figcaption>
-        </figure>
-        <figure class="shot">
-          <button class="shot-btn" data-img="shots/items.png" data-cap="物品分类页 · 12 大分类树，一层层筛到具体物品">
-            <img src="shots/items.png" alt="物品分类页">
-          </button>
-          <figcaption>12 大分类树 · 一层层筛</figcaption>
-        </figure>
-        <figure class="shot">
-          <button class="shot-btn" data-img="shots/creature.png" data-cap="生物分类 · 10 类 14397 只，左侧一级分类 + 右侧等级/生命筛选">
-            <img src="shots/creature.png" alt="生物分类页">
-          </button>
-          <figcaption>生物 10 类 14397 只 · 点开看掉落与传授</figcaption>
+          <figcaption>装备词条筛选 · 10 个分类带件数，限定在当前分类内。<b>官网和插件都只能逐个搜。</b></figcaption>
         </figure>
       </div>
     </div>
@@ -518,7 +539,7 @@
 </button>
 
 <div class="qr-pop" id="qrPop" hidden>
-  <p class="t0">纯为爱发电 · 9.4 万条数据</p>
+  <p class="t0">纯为爱发电 · 9.4 万条数据 · v1.18.2</p>
   <div class="qr-frame">
     <img src="donate-wechat.png" alt="微信收款码"
          onerror="this.style.display='none';
@@ -545,7 +566,7 @@
    下载地址（夸克网盘，含提取码已带在链接里）
    要换下载地址，只改下面这一行
    ============================================================ */
-var PAIDAN_LINK = 'https://pan.quark.cn/s/abbedd1b96d1?pwd=tzyx';
+var PAIDAN_LINK = 'https://pan.quark.cn/s/830ca1288cef';
 
 (function () {
   var TOTAL = 20;
