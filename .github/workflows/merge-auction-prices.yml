@@ -1,0 +1,39 @@
+name: Merge AH Prices
+
+on:
+  schedule:
+    # 每天 UTC 02:00（北京时间 10:00）跑一次
+    - cron: '0 2 * * *'
+  workflow_dispatch:   # 允许手动触发
+
+permissions:
+  contents: write      # 要能 commit 回 data/auction_prices.json
+
+jobs:
+  merge:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Run merge script
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python scripts/merge_prices.py
+
+      - name: Commit updated prices
+        run: |
+          if git diff --exit-data data/auction_prices.json; then
+            echo "没有变化，不需要 commit"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/auction_prices.json
+          git commit -m "chore(ah): 自动合并价格数据 $(date -u +%Y-%m-%d)"
+          git push
